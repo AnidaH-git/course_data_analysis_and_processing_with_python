@@ -35,7 +35,6 @@ The purpose of this repository is to:
 Projects in this repository are primarily based on:
 
 - Python
-- Jupyter Notebook
 - pandas
 - NumPy
 - basic Python standard library modules for data handling and processing
