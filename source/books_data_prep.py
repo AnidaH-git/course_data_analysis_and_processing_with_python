@@ -1,0 +1,25 @@
+import pandas as pd
+
+def convert_to_numeric(df):
+    df[['times_borrowed', 'page_count']] = df[['times_borrowed', 'page_count']].astype('Int16')
+    df['total_copies'] = pd.to_numeric(df['total_copies'], errors='coerce')
+    df['total_copies'] = df['total_copies'].astype('Int16')
+    df['year_published'] = pd.to_numeric(df['year_published'], errors='coerce')
+    df['year_published'] = df['year_published'].astype('Int16')
+    return df
+
+
+def convert_to_datetime(df):
+    df['last_borrowed_date'] = pd.to_datetime(df['last_borrowed_date'], errors='coerce', format='%d_%b_%y')
+    return df
+
+
+def convert_to_category(df):
+    df['genre'] = df['genre'].astype('category')
+    df['section'] = df['section'].astype('category')
+    df['language'] = df['language'].astype('category')
+    return df
+
+
+def prepare_data(df):
+    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category)
