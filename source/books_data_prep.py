@@ -21,5 +21,24 @@ def convert_to_category(df):
     return df
 
 
+def parse_ratings(df):
+
+    def parse_rating(text):
+        if pd.isna(text) or str(text).strip().lower() == "no rating available":
+            return None
+        
+        parts = str(text).split()
+
+        try:
+            return float(parts[0])
+        except (ValueError, IndexError):
+            return None
+
+    df['rating'] = df['rating'].apply(parse_rating)
+
+    return df
+
+
+
 def prepare_data(df):
-    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category)
+    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings)
