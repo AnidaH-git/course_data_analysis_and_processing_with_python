@@ -40,5 +40,13 @@ def parse_ratings(df):
 
 
 
+def split_dimensions_to_separate_columns(df):
+    df[['dimensions_width', 'dimensions_depth', 'dimensions_height']] = df['dimensions'].str.replace("inches", "").str.replace(" ", "").str.split('x', expand=True).astype(float)
+    df.drop('dimensions', axis=1, inplace=True)
+    return df
+
+
+
+
 def prepare_data(df):
-    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings)
+    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(split_dimensions_to_separate_columns)
