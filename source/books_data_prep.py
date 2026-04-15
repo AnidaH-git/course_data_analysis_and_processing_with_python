@@ -80,7 +80,13 @@ def split_dimensions_to_separate_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def split_catalog_position_to_separate_columns(df: pd.DataFrame) -> pd.DataFrame:
+    df[['catalog_shelf', 'catalog_row', 'catalog_row_number']
+       ] = df['catalog_position'].str.split('-', expand=True)
+
+    return df
+
 
 
 def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
-    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(parse_prices).pipe(split_dimensions_to_separate_columns)
+    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(parse_prices).pipe(split_dimensions_to_separate_columns).pipe(split_catalog_position_to_separate_columns)
