@@ -135,6 +135,19 @@ def standardize_sections(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def standardize_authors(df: pd.DataFrame) -> pd.DataFrame:
+
+    mapping = {
+    'Lev Tolstoy': 'Leo Tolstoy',
+    'Winston S. Churchill': 'Winston Churchill',
+    'Plato': 'Platon',
+    'Will Shakespeare': 'William Shakespeare'
+    }
+
+    df['author'] = df['author'].replace(mapping)
+    return df
+
+
 
 def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
-    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(parse_prices).pipe(split_dimensions_to_separate_columns).pipe(split_catalog_position_to_separate_columns).pipe(remove_na).pipe(remove_duplicates).pipe(standardize_languages).pipe(standardize_sections)
+    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(parse_prices).pipe(split_dimensions_to_separate_columns).pipe(split_catalog_position_to_separate_columns).pipe(remove_na).pipe(remove_duplicates).pipe(standardize_languages).pipe(standardize_sections).pipe(standardize_authors)
