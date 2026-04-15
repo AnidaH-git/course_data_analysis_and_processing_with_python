@@ -148,6 +148,31 @@ def standardize_authors(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def standardize_genres(df: pd.DataFrame) -> pd.DataFrame:
+
+    mapping = {
+    'Classic': 'Classics',
+    'Classic Literature': 'Classics',
+    'Novel': 'Novels',
+    "Religion, Spirituality": "Religion & Spirituality",
+    "Spirituality": "Religion & Spirituality",
+    "Historical": "History",
+    "Religious Fiction": "Religion & Spirituality",
+    "Religion": "Religion & Spirituality",
+    "Utopian Fiction": "Utopian",
+    "Utopian Literature": "Utopian",
+    "Natural History": "History",
+    "Children's Stories": "Children's Fiction",
+    "Children's Literature": "Children's Fiction",
+    "Music/Songbooks": "Music",
+    "Epic Poetry": "Poetry"
+    }
+
+    df['genre'] = df['genre'].astype(object).replace(mapping).astype('category')
+
+    return df
+
+
 
 def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
-    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(parse_prices).pipe(split_dimensions_to_separate_columns).pipe(split_catalog_position_to_separate_columns).pipe(remove_na).pipe(remove_duplicates).pipe(standardize_languages).pipe(standardize_sections).pipe(standardize_authors)
+    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(parse_prices).pipe(split_dimensions_to_separate_columns).pipe(split_catalog_position_to_separate_columns).pipe(remove_na).pipe(remove_duplicates).pipe(standardize_languages).pipe(standardize_sections).pipe(standardize_authors).pipe(standardize_genres)
