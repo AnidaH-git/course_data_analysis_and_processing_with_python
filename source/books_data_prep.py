@@ -1,6 +1,6 @@
 import pandas as pd
 
-def convert_to_numeric(df):
+def convert_to_numeric(df: pd.DataFrame) -> pd.DataFrame:
     df[['times_borrowed', 'page_count']] = df[['times_borrowed', 'page_count']].astype('Int16')
     df['total_copies'] = pd.to_numeric(df['total_copies'], errors='coerce')
     df['total_copies'] = df['total_copies'].astype('Int16')
@@ -9,19 +9,19 @@ def convert_to_numeric(df):
     return df
 
 
-def convert_to_datetime(df):
+def convert_to_datetime(df: pd.DataFrame) -> pd.DataFrame:
     df['last_borrowed_date'] = pd.to_datetime(df['last_borrowed_date'], errors='coerce', format='%d_%b_%y')
     return df
 
 
-def convert_to_category(df):
+def convert_to_category(df: pd.DataFrame) -> pd.DataFrame:
     df['genre'] = df['genre'].astype('category')
     df['section'] = df['section'].astype('category')
     df['language'] = df['language'].astype('category')
     return df
 
 
-def parse_ratings(df):
+def parse_ratings(df: pd.DataFrame) -> pd.DataFrame:
 
     def parse_rating(text):
         if pd.isna(text) or str(text).strip().lower() == "no rating available":
@@ -40,7 +40,7 @@ def parse_ratings(df):
 
 
 
-def split_dimensions_to_separate_columns(df):
+def split_dimensions_to_separate_columns(df: pd.DataFrame) -> pd.DataFrame:
     df[['dimensions_width', 'dimensions_depth', 'dimensions_height']] = df['dimensions'].str.replace("inches", "").str.replace(" ", "").str.split('x', expand=True).astype(float)
     df.drop('dimensions', axis=1, inplace=True)
     return df
@@ -48,5 +48,5 @@ def split_dimensions_to_separate_columns(df):
 
 
 
-def prepare_data(df):
+def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
     return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(split_dimensions_to_separate_columns)
