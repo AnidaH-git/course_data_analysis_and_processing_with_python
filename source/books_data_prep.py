@@ -87,6 +87,19 @@ def split_catalog_position_to_separate_columns(df: pd.DataFrame) -> pd.DataFrame
     return df
 
 
+def remove_na(df: pd.DataFrame) -> pd.DataFrame:
+    del df['isbn']
+    del df['thumbnail']
+
+    df.dropna(axis=0, thresh=12, inplace=True)
+
+    df.dropna(subset=['catalog_position', 'title',
+              'author'], how="all", inplace=True)
+
+    df['title'] = df['title'].fillna("Unknown title")
+    df['author'] = df['author'].fillna("Unknown author")
+    return df
+
 
 def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
-    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(parse_prices).pipe(split_dimensions_to_separate_columns).pipe(split_catalog_position_to_separate_columns)
+    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(parse_prices).pipe(split_dimensions_to_separate_columns).pipe(split_catalog_position_to_separate_columns).pipe(remove_na)
