@@ -56,6 +56,23 @@ def parse_ratings_count(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+def parse_prices(df: pd.DataFrame) -> pd.DataFrame:
+
+    def parse_price(text):
+
+        if pd.isna(text) or str(text).strip().lower() == "price not available":
+            return None
+
+        try:
+            price_str = str(text).replace('$', '').strip()
+            return float(price_str)
+        except ValueError:
+            return None
+
+    df['price'] = df['price'].apply(parse_price)
+
+    return df
+
 
 def split_dimensions_to_separate_columns(df: pd.DataFrame) -> pd.DataFrame:
     df[['dimensions_width', 'dimensions_depth', 'dimensions_height']] = df['dimensions'].str.replace("inches", "").str.replace(" ", "").str.split('x', expand=True).astype(float)
@@ -66,4 +83,4 @@ def split_dimensions_to_separate_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
-    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(split_dimensions_to_separate_columns)
+    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(parse_prices).pipe(split_dimensions_to_separate_columns)
