@@ -39,6 +39,23 @@ def parse_ratings(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def parse_ratings_count(df: pd.DataFrame) -> pd.DataFrame:
+
+    def parse_rating_count(text):
+        if pd.isna(text) or str(text).strip().lower() == "no reviews":
+            return None
+
+        parts = str(text).replace(',', '').split()
+
+        try:
+            return int(parts[0])
+        except (ValueError, IndexError):
+            return None
+
+    df['ratings_count'] = df['ratings_count'].apply(parse_rating_count)
+
+    return df
+
 
 def split_dimensions_to_separate_columns(df: pd.DataFrame) -> pd.DataFrame:
     df[['dimensions_width', 'dimensions_depth', 'dimensions_height']] = df['dimensions'].str.replace("inches", "").str.replace(" ", "").str.split('x', expand=True).astype(float)
@@ -49,4 +66,4 @@ def split_dimensions_to_separate_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def prepare_data(df: pd.DataFrame) -> pd.DataFrame:
-    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(split_dimensions_to_separate_columns)
+    return df.pipe(convert_to_numeric).pipe(convert_to_datetime).pipe(convert_to_category).pipe(parse_ratings).pipe(parse_ratings_count).pipe(split_dimensions_to_separate_columns)
